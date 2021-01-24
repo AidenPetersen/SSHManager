@@ -5,11 +5,11 @@ A simple ssh login managing tool. It keeps track of the SSH addresses and descri
 You can easily install this program by running 
 ```bash
 $ chmod +x install.sh
-# ./install.sh
+$ sudo ./install.sh
 ```
 or you could simply run
 ```bash
-# mv sshmgr /usr/local/bin
+$ sudo mv sshmgr /usr/local/bin
 ```
 instead.
 
