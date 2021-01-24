@@ -1,0 +1,81 @@
+#!/bin/bash
+
+FOLDER=~/.sshmgr
+
+if [ ! -d "$FOLDER" ] 
+  then
+  echo "Making $FOLDER to store addresses and descriptions"
+  mkdir ~/.sshmgr
+  cd $FOLDER
+  touch addresses.txt 
+  cd
+fi
+
+
+if [ ! -f "$FOLDER/addresses.txt" ] 
+  then
+  cd $FOLDER
+  touch addresses.txt
+  cd
+fi
+
+ADDRESSFILE=~/.sshmgr/addresses.txt
+
+IPARR=()
+while IFS= read -r line; do
+  IPARR+=("$line")
+done < $ADDRESSFILE
+
+function connect (){
+  if [ -z "$IPARR" ] 
+    then
+	echo "There are no added addresses. To add an address run 'sshmgr add'."
+	return 0
+	fi
+  echo "Servers:"
+  PS3="Select Number to Connect: "
+  
+  select address in "${IPARR[@]}"
+  do
+    head=$(echo $address | awk '{print $1;}')
+    echo "SSHing into: $head"
+	break
+  done
+ 
+  ssh $head
+  exit 0
+}
+
+if [ $# -eq 0 ] 
+  then
+  connect  
+else
+  if [ $1 = "connect" ] 
+    then 
+    connect
+  elif [ $1 = "add" ] 
+    then
+    echo "Input address (e.g. example@127.0.0.1) : "
+    read address
+	echo "Input description : "
+	read description
+    echo $address $description >> $ADDRESSFILE
+  elif [ $1 = "remove" ] 
+    then
+	echo "Servers"
+	PS3="Select Number to Remove: "
+    select address in "${IPARR[@]}"
+	do
+	  sed -i -e "/$address/d" $ADDRESSFILE
+	  break
+	done
+  elif [ $1 = "list" ]
+    then
+	for num in "${IPARR[@]}"
+	  do
+	  echo $num
+   	  done
+  else
+    printf "Avaliable commands: \nconnect: Connects to a stored ssh address.\nadd:     Add an address.\nremove:  Remove a saved address.\nlist:    List all saved addresses."
+  fi
+fi
