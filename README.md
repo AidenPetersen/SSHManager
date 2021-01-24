@@ -1,5 +1,5 @@
 # SSHManager
-A simple ssh login managing tool. It keeps track of the SSH addresses and descriptions. It does NOT keep track of passwords.
+A simple SSH login managing tool. It keeps track of the SSH addresses and descriptions. It does NOT keep track of passwords.
 
 # Installation
 You can easily install this program by running 
